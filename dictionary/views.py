@@ -11,21 +11,21 @@ def define(request, word):
     if len(word.split()) > 1:
         return Response({'msg': 'Word must be only a single element'}, status=400)
 
-    html = _get_html(f"https://www.dictionary.com/browse/{word}")
+    html = get_html(f"https://www.dictionary.com/browse/{word}")
 
-    definitions = _get_definitions(html)
+    definitions = get_definitions(html)
 
-    examples = _get_examples(html)
+    examples = get_examples(html)
 
     return Response({"definitions": definitions, "examples": examples}, status=200)
 
 
-def _get_html(url, parser="html.parser"):
+def get_html(url, parser="html.parser"):
     """Returns html content of the page by url"""
     return BeautifulSoup(requests.get(url).text, parser)
 
 
-def _get_definitions(html):
+def get_definitions(html):
     """Returns list of word's definitions
      find on html content of the page"""
     definitions_html = html.findAll(attrs={"class": "e1q3nk1v3"})
@@ -35,7 +35,7 @@ def _get_definitions(html):
     return defs
 
 
-def _get_examples(html):
+def get_examples(html):
     """Returns list of word's usage examples
      find on html content of the page"""
     return [example.get_text() for example in
